@@ -14,6 +14,14 @@ import imutils
 import numpy as np
 from matplotlib import pyplot as plt
 import sys
+import os
+
+
+if len(sys.argv) != 2 and len(sys.argv) != 3:
+    print('Usage1: python3 main.py img')
+    print('Usage2: python3 main.py img result.jpg')
+    sys.exit()
+
 
 img = cv2.imread('imgs/' + sys.argv[1], cv2.IMREAD_UNCHANGED)
 height, width, channels = img.shape
@@ -57,10 +65,12 @@ for i in range(1, len(rust)):
 # Histograma que demonstra a quantidade de
 # pixeis presentes na imagem final
 color = ('b', 'g', 'r')
+total = 0
 for i, col in enumerate(color):
     histr = cv2.calcHist([final], [i], None, [256], [1,256])
     plt.plot(histr, color = col)
     plt.xlim([0, 256])
+    plt.title('Análise de corrosão')
 
 # Limitar a largura da imagem a 1280,
 # mas manter a largura se a original for menor que 1280
@@ -69,6 +79,36 @@ if width > max_width:
     n_width = max_width
 else:
     n_width = width
+
+# Guardar a imagem resultado
+path = 'imgs'
+if len(sys.argv) == 3:
+    cv2.imwrite(os.path.join(path, sys.argv[2]), final)
+else:
+    cv2.imwrite(os.path.join(path , 'result.jpg'), final)
+cv2.waitKey(0)
+
+# Obter a imagem para contagem de pixeis
+if len(sys.argv) == 3:
+    final2 = cv2.imread('imgs/' + sys.argv[2], 0)
+else:
+    final2 = cv2.imread('imgs/result.jpg', 0)
+
+tot_pixels = cv2.countNonZero(final2)
+perc = tot_pixels * (100 / final2.size)
+print('Número total de pixeis: ' + str(final2.size))
+print('Número total de pixeis com ferrugem: ' + str(tot_pixels))
+print('Percentagem de pixeis com ferrugem: {:.1f}%'.format(perc))
+
+if perc < 3:
+    print('Imagem com pouca ou nenhuma corrosao')
+elif perc < 10:
+    print('Imagem com alguma corrosao')
+else:
+    print('Imagem bastante corroída')
+
+
+
 
 # Imagem original
 img = imutils.resize(img, width=n_width)
