@@ -1,34 +1,41 @@
-# Original
-# boundaries = [ ([58, 57, 101], [76, 95, 162]) ]
-
+#
+# Deteção de corrosão em superfícies metálicas
+#
+# 88859 - Pedro Gonçalves
+# 89228 - Pedro Silva
+#
+# Referências
+# https://answers.opencv.org/question/178394/detection-of-rust-with-opencv-python/?fbclid=IwAR1Lztp2SBI73kiGvkekMHdWPXO16HbhvNjWfhdgQh7T5gCs1v2mXA8Bp_Q
+#
 
 import cv2
 import imutils
 import numpy as np
 
-#Read the Rust Photograph
-img = cv2.imread('no_1.jpg', 1)
+# Ver no_3, no_5 e no_7
+# Ver 1, 3, 4, 5, 11, 21
+# Melhores 7, 8, 10, 12, 13, 14, 16, 17, 18, 20, 22
+img = cv2.imread('imgs/no_1.jpg', 1)
 height, width, channels = img.shape
 
-#Set different boundaries for different shades of rust
-# boundaries = [B, G, R] em vez de RGB
-rust1 = [([70, 57, 110], [83, 95, 130])]
-rust2 = [([80, 100, 140], [90, 110, 180])]
-rust3 = [([95, 125, 200], [100, 140, 205])]
-# ferrugem laranja
-rust4 = [([35, 65, 115], [45, 90, 145])]
+# Diferentes cores de ferrugem
+# rust = [(min[B, G, R], max[B, G, R])]
 
+# Low Red
+rust1 = [([30, 30, 60], [50, 40, 70])]
+rust2 = [([25, 30, 70], [40, 45, 80])]
+rust3 = [([40, 60, 90], [60, 65, 110])]
+# Mid Red
+rust4 = [([70, 57, 115], [83, 90, 130])]
+rust5 = [([80, 100, 145], [90, 110, 180])]
+rust6 = [([35, 65, 115], [45, 90, 145])]
+rust7 = [([20, 45, 140], [40, 65, 165])]
+rust8 = [([40, 85, 170], [50, 100, 185])]
+rust9 = [([5, 25, 115], [25, 45, 130])]
+# High Red
+rust10 = [([95, 125, 200], [100, 140, 205])]
+rust11 = [([115, 150, 220], [120, 160, 225])]
 
-rust5 = [([30, 30, 60], [50, 40, 70])]
-
-rust6 = [([115, 150, 220], [120, 160, 225])]
-
-# no = [([30, 40, 60], [50, 55, 70])]
-
-# no = [([100, 140, 205], [115, 150, 220])]
-
-
-#Highlight out the shades of rust
 for (lower1, upper1) in rust1:
     lower1 = np.array(lower1, dtype = "uint8")
     upper1 = np.array(upper1, dtype = "uint8")
@@ -65,12 +72,40 @@ for (lower6, upper6) in rust6:
     mask = cv2.inRange(img, lower6, upper6)
     output6 = cv2.bitwise_and(img, img, mask=mask)
 
-#Combine the 3 different masks with the different shades into 1 image file
+for (lower7, upper7) in rust7:
+    lower7 = np.array(lower7, dtype = "uint8")
+    upper7 = np.array(upper7, dtype = "uint8")
+    mask = cv2.inRange(img, lower7, upper7)
+    output7 = cv2.bitwise_and(img, img, mask=mask)
+
+for (lower8, upper8) in rust8:
+    lower8 = np.array(lower8, dtype = "uint8")
+    upper8 = np.array(upper8, dtype = "uint8")
+    mask = cv2.inRange(img, lower8, upper8)
+    output8 = cv2.bitwise_and(img, img, mask=mask)
+
+for (lower9, upper9) in rust9:
+    lower9 = np.array(lower9, dtype = "uint8")
+    upper9 = np.array(upper9, dtype = "uint8")
+    mask = cv2.inRange(img, lower9, upper9)
+    output9 = cv2.bitwise_and(img, img, mask=mask)
+
+for (lower10, upper10) in rust10:
+    lower10 = np.array(lower10, dtype = "uint8")
+    upper10 = np.array(upper10, dtype = "uint8")
+    mask = cv2.inRange(img, lower10, upper10)
+    output10 = cv2.bitwise_and(img, img, mask=mask)
+
+# Combinar os diferentes tipos de ferugem num ficheiro só
 final = cv2.bitwise_or(output1, output2)
 final = cv2.bitwise_or(final, output3)
 final = cv2.bitwise_or(final, output4)
 final = cv2.bitwise_or(final, output5)
 final = cv2.bitwise_or(final, output6)
+final = cv2.bitwise_or(final, output7)
+final = cv2.bitwise_or(final, output8)
+final = cv2.bitwise_or(final, output9)
+final = cv2.bitwise_or(final, output10)
 
 # Limitar a largura da imagem a 1280,
 # mas manter a largura se a original for menor que 1280
