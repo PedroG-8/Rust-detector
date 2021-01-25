@@ -39,15 +39,16 @@ rust.append([([5, 25, 115], [25, 45, 130])])
 rust.append([([95, 125, 200], [100, 140, 205])])
 rust.append([([115, 150, 220], [120, 160, 225])])
 
-
+# Criação da nova imagem a partir dos intervalos de ferrugem
+# Primeiro intervalo
 for (lower, upper) in rust[0]:
     lower = np.array(lower, dtype = "uint8")
     upper = np.array(upper, dtype = "uint8")
     mask = cv2.inRange(img, lower, upper)
     final = cv2.bitwise_and(img, img, mask=mask)
 
+# Todos os restantes
 for i in range(1, len(rust)):
-    print(i)
     for (lower, upper) in rust[i]:
         lower = np.array(lower, dtype = "uint8")
         upper = np.array(upper, dtype = "uint8")
@@ -77,7 +78,7 @@ cv2.imshow("original", img)
 # Imagem que indica onde há ferrugem
 final = imutils.resize(final, width=n_width)
 cv2.imshow("final", final)
-# cv2.imshow("histogram", histr)
+# Display do histograma
 plt.show()
 
 cv2.waitKey(0)
