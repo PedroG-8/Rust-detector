@@ -6,16 +6,18 @@
 #
 # Referências
 # https://answers.opencv.org/question/178394/detection-of-rust-with-opencv-python/?fbclid=IwAR1Lztp2SBI73kiGvkekMHdWPXO16HbhvNjWfhdgQh7T5gCs1v2mXA8Bp_Q
+# https://docs.opencv.org/master/d1/db7/tutorial_py_histogram_begins.html
 #
 
 import cv2
 import imutils
 import numpy as np
+from matplotlib import pyplot as plt
 
 # Ver no_3, no_5 e no_7
 # Ver 1, 3, 4, 5, 11, 21
 # Melhores 7, 8, 10, 12, 13, 14, 16, 17, 18, 20, 22
-img = cv2.imread('imgs/no_1.jpg', 1)
+img = cv2.imread('imgs/no_2.jpg', 1)
 height, width, channels = img.shape
 
 # Diferentes cores de ferrugem
@@ -36,6 +38,7 @@ rust9 = [([5, 25, 115], [25, 45, 130])]
 rust10 = [([95, 125, 200], [100, 140, 205])]
 rust11 = [([115, 150, 220], [120, 160, 225])]
 
+# Criação da nova imagem a partir dos intervalos de ferrugem
 for (lower1, upper1) in rust1:
     lower1 = np.array(lower1, dtype = "uint8")
     upper1 = np.array(upper1, dtype = "uint8")
@@ -96,7 +99,7 @@ for (lower10, upper10) in rust10:
     mask = cv2.inRange(img, lower10, upper10)
     output10 = cv2.bitwise_and(img, img, mask=mask)
 
-# Combinar os diferentes tipos de ferugem num ficheiro só
+# Combinar os diferentes tipos de ferrugem numa imagem só
 final = cv2.bitwise_or(output1, output2)
 final = cv2.bitwise_or(final, output3)
 final = cv2.bitwise_or(final, output4)
@@ -106,6 +109,14 @@ final = cv2.bitwise_or(final, output7)
 final = cv2.bitwise_or(final, output8)
 final = cv2.bitwise_or(final, output9)
 final = cv2.bitwise_or(final, output10)
+
+# Histograma que demonstra a quantidade de
+# pixeis presentes na imagem final
+color = ('b','g','r')
+for i,col in enumerate(color):
+    histr = cv2.calcHist([final],[i],None,[256],[1,256])
+    plt.plot(histr,color = col)
+    plt.xlim([0,256])
 
 # Limitar a largura da imagem a 1280,
 # mas manter a largura se a original for menor que 1280
@@ -121,5 +132,7 @@ cv2.imshow("original", img)
 # Imagem que indica onde há ferrugem
 final = imutils.resize(final, width=n_width)
 cv2.imshow("final", final)
+# cv2.imshow("histogram", histr)
+plt.show()
 
 cv2.waitKey(0)
