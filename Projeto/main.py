@@ -13,11 +13,12 @@ import cv2
 import imutils
 import numpy as np
 from matplotlib import pyplot as plt
+import sys
 
 # Ver no_3, no_5 e no_7
 # Ver 1, 3, 4, 5, 11, 21
 # Melhores 7, 8, 10, 12, 13, 14, 16, 17, 18, 20, 22
-img = cv2.imread('imgs/no_2.jpg', 1)
+img = cv2.imread('imgs/'+sys.argv[1], cv2.IMREAD_UNCHANGED)
 height, width, channels = img.shape
 
 rust = []
@@ -79,6 +80,5 @@ cv2.imshow("original", img)
 final = imutils.resize(final, width=n_width)
 cv2.imshow("final", final)
 # Display do histograma
-plt.show()
-
 cv2.waitKey(0)
+plt.show()
