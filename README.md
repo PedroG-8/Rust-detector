@@ -1,4 +1,4 @@
-# Projeto-CV
+# Rust Detector
 
 ## Python program to detect rust in different surfaces
 
